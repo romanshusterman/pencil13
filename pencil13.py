@@ -7,6 +7,7 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import os
+import lxlm
 
 # In[1]
 
@@ -25,7 +26,7 @@ driver = webdriver.Chrome(options=options)
 # In[23]:
 
 
-website = driver.get('https://www.ilmakiage.co.il/mineral-lip-pencil-4043')
+website = driver.get('https://www.ilmakiage.co.il/mineral-lip-pencil-4046')
 
 
 # In[24]:
@@ -49,12 +50,15 @@ soup = BeautifulSoup(soup1, 'lxml')
 
 
 if soup.find('span', class_='qtyValidate_color')['style'] == 'display: none;':
+    email_val = 'send'
     result = "Tut sheli, it'shopping time, your favorite lip pencil is in stock \n https://www.ilmakiage.co.il/mineral-lip-pencil-4043 \n"
     print(result)
 elif soup.find('span', class_='qtyValidate_color')['style'] == 'display: block;':
+    email_val = 'not_send'
     result = 'Ooops, the stock is empty. Open the app later to check quantity \n'
     print(result)
 else:
+    email_val = 'send'
     result = 'Error'
     print(result)
 
@@ -62,14 +66,14 @@ print(result)
 
 
 import boto3
-if result == "Tut sheli, it'shopping time, your favorite lip pencil is in stock \n https://www.ilmakiage.co.il/mineral-lip-pencil-4043 \n":
+if email_val == 'send'
     ses_client = boto3.client("ses", region_name="ap-northeast-1")
     CHARSET = "UTF-8"
 
     response = ses_client.send_email(
     Destination={
             "ToAddresses": [
-                "nogabrami@gmail.com",
+                "shuster.landing@gmail.com",
             ],
         },
     Message={
